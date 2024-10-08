@@ -1,0 +1,151 @@
+@if(popover) {
+<div  class="popover-modal">
+  <div class="popovermodal-container">
+      <h2>Confirm Deletion</h2>
+      <p>Are you sure you want to delete invoice #{{data[0].id}}? This action cannot be undone.</p>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col">
+            <button class="btn-edit me-1"  (click)="handleShowPopover()">Cancel</button>
+            <button class="btn-delete" (click)="handleRemove(data[0].id)">Delete</button>
+        </div>
+      </div>
+  </div>
+</div>
+}
+
+
+<div class="backbtn-section">
+    <button (click)="closeDetailsOrEditForm()">
+        <img src="/icon-arrow-left.svg" class="mx-auto me-3" alt="icon arrow left" />
+        Go back
+    </button>
+</div>
+
+<div class="status-bar mb-4">
+    <div class="container">
+        <div class="row">
+            <div class="col d-flex align-items-center gap-3">
+                Status:  
+                <button class="btn" 
+                [ngClass]="{
+                    'status-paid': data[0].status === 'paid',
+                    'status-pending': data[0].status === 'pending',
+                    'status-draft': data[0].status === 'draft'
+                }"
+                >
+                <div class="status-dot"></div>
+                {{data[0].status}}
+            </button>
+            </div>
+            <div class="col d-flex justify-content-end gap-2">
+                <button class="btn-edit" (click)="handleEdit()">Edit</button>
+                <button class="btn-delete" (click)="handleShowPopover()">Delete</button>
+                <button class="btn-paid" (click)="markInvoiceAsPaid(data[0].id)"
+                [disabled]="data[0].status === 'paid'"
+                >Mark as Paid</button>
+            </div>
+        </div>
+    </div>            
+</div>
+
+
+<div class="info-section">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col">
+                <p class="info-title">{{ data[0].id }}</p>
+                <p class="info-text">{{ data[0].description }}</p>
+            </div>
+            <div class="col"></div>
+            <div class="col"></div>
+            <div class="col">
+                @if(data[0].clientAddress.street) {
+                <p class="info-text">{{ data[0].clientAddress.street + ',' }}</p>
+                }
+                @if(data[0].clientAddress.city) {
+                <p class="info-text">{{ data[0].clientAddress.city + ',' }}</p>
+                }
+                @if(data[0].clientAddress.postCode) {
+                <p class="info-text">{{ data[0].clientAddress.postCode + ',' }}</p>
+                }
+                @if(data[0].clientAddress.country ) {
+                <p class="info-text">{{ data[0].clientAddress.country }}</p>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <p class="info-text">Invoice Date</p>
+                <p class="info-title mb-3">{{ data[0].createdAt }}</p>
+                <p class="info-text">Payment Due</p>
+                <p class="info-title">{{ data[0].paymentDue }}</p>
+            </div>
+            <div class="col">
+                <p class="info-text">Bill To</p>
+                @if(data[0].clientName) {
+                <p class="info-title">{{ data[0].clientName }}</p>
+                }
+                @if(data[0].senderAddress.street) {
+                <p class="info-text">{{ data[0].senderAddress.street + ',' }}</p>
+                }
+                @if(data[0].senderAddress.city) {
+                <p class="info-text">{{ data[0].senderAddress.city + ',' }}</p>
+                }
+                @if(data[0].senderAddress.postCode) {
+                <p class="info-text">{{ data[0].senderAddress.postCode + ',' }}</p>
+                }
+                @if(data[0].senderAddress.country) {
+                <p class="info-text">{{ data[0].senderAddress.country }}</p>
+                }
+
+            </div>
+            <div class="col">
+                <p class="info-text">Sent to</p>
+                <p class="info-title">{{ data[0].clientEmail }}</p>
+            </div>
+            <div class="col">
+            </div>
+        </div>
+        @if(data[0].items) {
+        <div class="row mt-5">
+           <div class="items-list">
+            <div class="items-wrap">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Item Name</th>
+                        <th scope="col">QTY.</th>
+                        <th scope="col">Price</th>
+                        <th scope="col" class="text-end">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                     
+                        @for (item of data[0].items; track item.name) {
+                         <tr>
+                          <td>{{item.name}}</td>
+                          <td>{{item.quantity}}</td>
+                          <td>{{item.price  | currency}}</td>
+                          <td class="text-end">{{item.total  | currency}}</td>
+                         </tr>
+                        }
+                     
+                    </tbody>
+                </table>
+            </div>
+
+              <div class="items-total">
+                <p class="item-total-label">Amount Due</p>
+                <p class="item-total">
+
+                   {{totalAmount(data[0].items) | currency}}
+                </p>
+             </div>
+           </div>
+        </div>
+        }
+    </div>      
+</div>
+

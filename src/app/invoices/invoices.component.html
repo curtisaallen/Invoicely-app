@@ -1,0 +1,106 @@
+
+<app-side-nav (toggleThemeMode)="toggleThemeMode($event)"></app-side-nav>
+
+<div class="custom-container" [ngClass]="{'light-container': setThemeMode}">
+
+    @if(!showDetails) {
+    <div class="container mb-5 header-hero">
+        <div class="row">
+          <div class="col">
+            <h2>Invoices</h2>
+            <p>There are {{invoicesCount}} total invoices</p>
+          </div>
+          <div class="col d-flex justify-content-end align-items-center">
+
+
+
+            <div class="btn-group filter-section">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filter by status
+                    <img src="/icon-arrow-down.svg" class="mx-auto" alt="icon arrown down" />
+                </button>
+                <ul class="dropdown-menu">
+                    @for (status of statuses; track status) {
+                    <li>
+                        <div class="form-check">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                {{ status.title }}
+                            </label>
+                            <input 
+                            class="form-check-input" 
+                            type="checkbox"  
+                            [checked]="status.status"
+                            [value]="status.title" (click)="onStatusSelect($event)" >
+                        </div>
+                    </li>
+                    }
+                </ul>
+            </div>
+        
+            <button (click)="onAddNewInvoice()" class="btn btn-addnew">
+                <img src="/icon-plus.svg" class="mx-auto" alt="icon plus" />
+                New Invoice
+            </button>
+          </div>
+        </div>
+    </div>
+
+        <ul class="list-group">
+                @for (invoice of filteredInvoicesList; track invoice.id) {
+                    <li class="list-group-item" (click)="onShowDetailInvoice(invoice.id)">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <span class="fw-bold">
+                                        #{{invoice.id}}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    {{invoice.createdAt}}
+                                </div>
+                                <div class="col">
+                                    {{invoice.clientName}}
+                                </div>
+                                <div class="col">
+                                  
+                                </div>
+                                <div class="col total-price">
+                                    <span class="fw-bold">
+                                        {{invoice.total | currency}}
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <button class="btn" 
+                                    [ngClass]="{
+                                        'status-paid': invoice.status === 'paid',
+                                        'status-pending': invoice.status === 'pending',
+                                        'status-draft': invoice.status === 'draft'
+                                    }"
+                                    >
+                                    <div class="status-dot"></div>
+                                    {{invoice.status}}
+                                </button>
+                                <img src="/icon-arrow-right.svg" class="mx-auto ms-3" alt="icon arrow right" />
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </li>
+                }
+        </ul>
+    }
+    @if(showDetails) {
+       <app-invoice-details (edit)="toggleEditForm($event)" (back)="closeDetailsOrEditForm($event)" [id]="userId" [data]="user" (remove)="onRemoveInvoice($event)" (paid)="markInvoiceAsPaid($event)"></app-invoice-details>
+    }
+</div>
+
+
+@if(isAddingInvoice){
+   <app-new-invoice (add)="onAddInvoice($event)" (discard)="discard($event)"></app-new-invoice>
+}
+
+@if(showEditForm) {
+   <app-edit-invoice [id]="userId" (discard)="discard($event)" (invoiceToEdit)="user" [data]="user" (editInvoice)="onEditInvoice($event)"></app-edit-invoice>
+}
+
+

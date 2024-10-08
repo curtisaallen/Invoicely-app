@@ -1,0 +1,193 @@
+<div class="popupform-wrap"> 
+    <div class="popup-form">
+        <form (ngSubmit)="handleSubmit()">
+        
+
+
+            <div class="form-group form-title">
+                <label>Bill From</label>
+            </div>
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="senderStreet">Street</label>
+                    <input type="text" class="form-control" id="senderStreet" name="senderStreet" [(ngModel)]="senderAddress[0].street" />
+                </div>
+            </div>
+    
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="senderCity">City</label>
+                    <input type="text" class="form-control" id="senderCity" name="senderCity" [(ngModel)]="senderAddress[0].city" />
+                </div>
+                <div class="col">
+                    <label for="senderPostCode">Post Code</label>
+                    <input type="text" class="form-control" id="senderPostCode" name="senderPostCode" [(ngModel)]="senderAddress[0].postCode" />
+                </div>
+                <div class="col">
+                    <label for="senderCountry">Country</label>
+                    <input type="text" class="form-control" id="senderCountry" name="senderCountry" [(ngModel)]="senderAddress[0].country" />
+                </div>
+            </div>
+
+
+
+
+
+            <div class="form-group form-title">
+                <label>Bill To</label>
+            </div>
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="clientName">Client Name</label>
+                    <input type="text" class="form-control"  id="clientName" name="clientName" [(ngModel)]="clientName" />
+                </div>
+            </div>
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="clientEmail">Client Email</label>
+                    <input type="email" class="form-control"  id="clientEmail" name="clientEmail" [(ngModel)]="clientEmail" />
+                </div>
+            </div>
+    
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="clientStreet">Street</label>
+                    <input type="text" class="form-control" id="clientStreet" name="clientStreet" [(ngModel)]="clientAddress[0].street" />
+                </div>
+            </div>
+     
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="clientCity">City</label>
+                    <input type="text" class="form-control" id="clientCity" name="clientCity" [(ngModel)]="clientAddress[0].city" />
+                </div>
+                <div class="col">
+                    <label for="clientPostCode">Post Code</label>
+                    <input type="text" class="form-control" id="clientPostCode" name="clientPostCode" [(ngModel)]="clientAddress[0].postCode" />
+                </div>
+                <div class="col">
+                    <label for="clientCountry">Country</label>
+                    <input type="text" class="form-control" id="clientCountry" name="clientCountry" [(ngModel)]="clientAddress[0].country" />
+                </div>
+            </div>
+
+
+
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="paymentDue">Invoice Date</label>
+                    <input type="date" class="form-control" id="paymentDue" name="paymentDue" [(ngModel)]="paymentDue" />
+                </div>
+            </div>
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="paymentTerms">Payment Terms</label>
+                    <input type="number" class="form-control"  id="paymentTerms" name="paymentTerms" [(ngModel)]="paymentTerms" />
+                </div>
+            </div>    
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" id="description" name="description" [(ngModel)]="description" />
+                </div>
+            </div>
+
+
+      
+        
+            <div class="form-group">
+                <label>Items</label>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Item Name</label>
+                </div>
+                <div class="col">
+                    <label>Qty.</label>
+                </div>
+                <div class="col">
+                    <label>Price</label>
+                </div>
+                <div class="col">
+                    <label>Total</label>
+                </div>
+            </div>
+
+            <div class="popup-items__table">
+                @for (item of items; track item.name; let i = $index, e = $even) {
+                    <div class="row mb-3">
+                        <div class="col popup-items-name">
+                            <input name="item-{{i}}-name"  class="popup-items__table-input" 
+                            [(ngModel)]="item.name"
+                            placeholder="Item Name" 
+                             />
+                        </div>
+                        <div class="col popup-items-quantity">
+                            <input
+                            name="quantity-{{i}}-item" 
+                            type="number" class="popup-items__table-input" 
+                            [(ngModel)]="item.quantity"
+                            (input)="calculateTotal(item)"  />
+                        </div>
+                        <div class="col popup-items-price">
+                            <input
+                            name="price-{{i}}-item" 
+                            type="number" class="popup-items__table-input" 
+                            [(ngModel)]="item.price"
+                            (input)="calculateTotal(item)"  />
+                        </div>
+                        <div class="col popup-items-total">
+                            <div class="popup-items__total-wrap">
+                                <input 
+                                name="total-{{i}}-item" 
+                                class="popup-items__table-input" [value]="item.total.toFixed(2)" disabled />
+                                <button class="popup-items__delete"  (click)="removeItem(i)">
+                                    <img  src="/icon-delete.svg" class="mx-auto" alt="icon delete" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+               }
+            </div>
+            
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <button type="button" class="popup-items__add" (click)="addItem()">+ Add New Item</button>
+                </div>
+            </div> 
+        
+
+
+
+
+
+
+            <div class="row mb-3">
+                <div class="col">
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                    <button (click)="handleDiscard()" class="btn-discard">Cancel</button>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn-savechange">Save Changes</button>
+                </div>
+            </div> 
+
+
+
+        </form>
+  
+   </div>
+</div>
